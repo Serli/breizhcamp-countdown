@@ -25,10 +25,10 @@
                   android:keepScreenOn="true"
                   android:textColor="#ffffff"
                   android:textStyle="bold"
-                  android:gravity="center|center_vertical"
+                  android:gravity="right|center_vertical"
                   android:textAlignment="gravity"
                   android:textSize="120sp"
-                  android:layout_gravity="center|center_vertical"/>
+                  android:layout_gravity="right|center_vertical"/>
 
 
     </LinearLayout>

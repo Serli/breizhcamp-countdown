@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -97,6 +98,7 @@ public class CountDownActivity extends Activity {
 
         if (preferences.getBoolean("logoOnTop", false)) {
             layout.setOrientation(LinearLayout.VERTICAL);
+            contentView.setGravity(Gravity.CENTER);
         }
 
         contentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, preferences.getFloat("textSize", 120));
