@@ -12,6 +12,7 @@
 
     <TextView android:id="@+id/main_activity_title"
               android:text="@string/app_name"
+              android:textSize="30sp"
               android:textAppearance="?android:attr/textAppearanceLarge"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>
@@ -25,8 +26,16 @@
               android:hint="@string/duration_hint"
               android:layout_marginTop="25dp"/>
 
-    <Button android:id="@+id/start"
+    <Button android:id="@+id/btn_start"
             android:text="@string/button_start"
+            android:enabled="false"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"/>
+
+    <Button android:id="@+id/conf"
+            android:text="@string/button_conf"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

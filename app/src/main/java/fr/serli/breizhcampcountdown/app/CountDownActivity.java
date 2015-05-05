@@ -1,8 +1,17 @@
 package fr.serli.breizhcampcountdown.app;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import fr.serli.breizhcampcountdown.app.util.SystemUiHider;
 
@@ -12,6 +21,11 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.BitSet;
 
 
 public class CountDownActivity extends Activity {
@@ -43,6 +57,8 @@ public class CountDownActivity extends Activity {
      */
     private SystemUiHider mSystemUiHider;
 
+    private LinearLayout layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +85,7 @@ public class CountDownActivity extends Activity {
             }
         });
 
+        layout = (LinearLayout) findViewById(R.id.cd_frame_layout);
 
         Intent receptedIntent = getIntent();
         Long duration = receptedIntent.getLongExtra("duration",3);
@@ -80,18 +97,36 @@ public class CountDownActivity extends Activity {
                 long minutes = millisUntilFinished/60000;
                 long secondes = (millisUntilFinished%60000)/1000;
                 ((TextView) contentView).setText(minutes+":"+secondes);
+                if(secondes<10){
+                    ((TextView) contentView).setText(minutes+":0"+secondes);
+                }
 
                 if (millisUntilFinished<=300000){
-                    findViewById(R.id.cd_frame_layout).setBackgroundColor(Color.rgb(240,250,60));
+                    layout.setBackgroundColor(Color.rgb(240, 250, 60));
                 }
             }
 
             public void onFinish(){
+                ((TextView) contentView).setText("Time's up !");
 
-                ((TextView) contentView).setText("done");
-                findViewById(R.id.cd_frame_layout).setBackgroundColor(Color.RED);
+                final AnimationDrawable drawable = new AnimationDrawable();
+                drawable.addFrame(new ColorDrawable(Color.RED), 400);
+                drawable.addFrame(new ColorDrawable(Color.BLACK), 400);
+                drawable.setOneShot(false);
+
+                layout.setBackground(drawable);
+                drawable.start();
             }
         }.start();
+
+        Bitmap image;
+        try {
+            FileInputStream input = openFileInput("bcCountdownLogo.png");
+            image = BitmapFactory.decodeStream(input);
+            ((ImageView) findViewById(R.id.logo)).setImageBitmap(image);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 

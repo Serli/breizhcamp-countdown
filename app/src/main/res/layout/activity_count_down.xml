@@ -2,31 +2,35 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#0099cc"
-             tools:context=".CountDownActivity">
+             android:background="#000000"
+             tools:context=".CountDownActivity"
+        android:layout_gravity="center">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout android:layout_width="match_parent"
+    <LinearLayout android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:fitsSystemWindows="true" android:id="@+id/cd_frame_layout">
+                 android:orientation="horizontal"
+                 android:fitsSystemWindows="true"
+                 android:id="@+id/cd_frame_layout"
+                 android:keepScreenOn="true">
 
-        <ImageView android:layout_width="200dp" android:layout_height="200dp" android:src="@drawable/chat_drop"
-                android:layout_gravity="left"/>
-
+        <ImageView android:id="@+id/logo"
+                   android:layout_width="200dp"
+                   android:layout_height="200dp"
+                   android:layout_gravity="left|center"
+                   android:src="@drawable/bcLogo"/>
 
         <TextView android:id="@+id/fullscreen_content"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:keepScreenOn="true"
-                  android:textColor="#33b5e5"
+                  android:textColor="#ffffff"
                   android:textStyle="bold"
-                  android:textSize="50sp"
-                  android:gravity="right"/>
-    </FrameLayout>
+                  android:gravity="center|center_vertical"
+                  android:textAlignment="gravity"
+                  android:textSize="120sp"
+                  android:layout_gravity="right|center_vertical"/>
+
+
+    </LinearLayout>
 
 </FrameLayout>
