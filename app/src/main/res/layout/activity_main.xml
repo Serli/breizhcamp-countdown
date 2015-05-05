@@ -28,7 +28,6 @@
 
     <Button android:id="@+id/btn_start"
             android:text="@string/button_start"
-            android:enabled="false"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

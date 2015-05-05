@@ -5,24 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-import fr.serli.breizhcampcountdown.app.util.ImageLoadingTask;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.ExecutionException;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
+import com.squareup.picasso.Picasso;
 
 
 public class ConfActivity extends Activity {
 
-    Bitmap image;
     EditText txtUrl;
+    TextView txtPreview;
+    CheckBox checkbox;
+    SeekBar seekbar;
+    View btnPreview;
     SharedPreferences preferences;
 
     @Override
@@ -32,61 +33,75 @@ public class ConfActivity extends Activity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
+        txtPreview = (TextView) findViewById(R.id.conf_txt_preview);
         txtUrl = (EditText) findViewById(R.id.conf_url);
+        checkbox = (CheckBox) findViewById(R.id.conf_chkbox);
+        seekbar = (SeekBar)findViewById(R.id.conf_seekbar);
+        btnPreview = findViewById(R.id.conf_btn_preview);
 
-        txtUrl.setText(preferences.getString("imageUrl",""));
+        checkbox.setChecked(preferences.getBoolean("logoOnTop", false));
 
-        findViewById(R.id.conf_btn_ok).setOnClickListener(new View.OnClickListener() {
+        float textSize = preferences.getFloat("textSize", 120);
+        txtPreview.setTextSize(textSize);
+        seekbar.setProgress(Math.round(textSize));
+
+        txtUrl.setText(preferences.getString("imageUrl", "http://www.breizhcamp.org/img/logo.png"));
+
+        btnPreview.requestFocus();
+
+        txtUrl.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        });
+
+        btnPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String imgUrl = txtUrl.getText().toString();
-                try {
-                    URL url = new URL(imgUrl);
-                    ImageLoadingTask imgLoader = new ImageLoadingTask();
-                    imgLoader.execute(url);
-                    image = imgLoader.get();
-                    if (image != null) ((ImageView) findViewById(R.id.conf_img_preview)).setImageBitmap(image);
-                } catch (MalformedURLException e) {
-                    Toast.makeText(v.getContext(), "Url invalide", Toast.LENGTH_SHORT);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                Picasso.with(v.getContext())
+                        .load(imgUrl)
+                        .into((ImageView) findViewById(R.id.conf_img_preview));
             }
         });
 
         findViewById(R.id.conf_btn_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (image!=null) {
-                    String imgUrl = txtUrl.getText().toString();
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(v.getContext());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("imageUrl", imgUrl);
-                    editor.commit();
-
-
-                    try {
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-
-                        FileOutputStream output = openFileOutput("bcCountdownLogo.png", MODE_PRIVATE);
-                        output.write(byteArray);
-
-                    } catch (FileNotFoundException e) {
-                        Toast.makeText(v.getContext(), "File not found", Toast.LENGTH_LONG);
-                    } catch (IOException e) {
-                        Toast.makeText(v.getContext(), "Error while saving image", Toast.LENGTH_LONG);
-                    }
-                }
-                Intent retour = new Intent(ConfActivity.this,MainActivity.class);
+                SharedPreferences.Editor editor = preferences.edit();
+                String imgUrl = txtUrl.getText().toString();
+                editor.putString("imageUrl", imgUrl);
+                editor.apply();
+                editor.putFloat("textSize", txtPreview.getTextSize());
+                editor.apply();
+                editor.putBoolean("logoOnTop", checkbox.isChecked());
+                editor.apply();
+                Intent retour = new Intent(ConfActivity.this, MainActivity.class);
                 startActivity(retour);
             }
         });
 
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float coefficient = progress;
+                if (coefficient == 0) {
+                    coefficient = 1;
+                }
+                txtPreview.setTextSize(TypedValue.COMPLEX_UNIT_SP, coefficient);
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 }

@@ -2,7 +2,9 @@ package fr.serli.breizhcampcountdown.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,9 +20,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
         durationSet = (EditText) findViewById(R.id.duration);
+
+        durationSet.setText(preferences.getString("previousDuration", "10"));
 
         btnStart = (Button) findViewById(R.id.btn_start);
 
@@ -47,6 +54,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Long duration = Long.parseLong(durationSet.getText().toString());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("previousDuration", duration.toString());
+                editor.apply();
                 Intent startCountdown = new Intent(MainActivity.this, CountDownActivity.class);
                 startCountdown.putExtra("duration", duration);
                 startActivity(startCountdown);

@@ -1,54 +1,93 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              tools:context="fr.serli.breizhcampcountdown.app.ConfActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="fr.serli.breizhcampcountdown.app.ConfActivity">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <TextView android:id="@+id/conf_title"
-              android:text="@string/conf_title"
-              android:textAppearance="?android:textAppearanceLarge"
-              android:gravity="center|top"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"/>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="?android:textAppearanceMedium"
-              android:text="@string/label_url_logo"
-              android:layout_marginTop="25dp"/>
+            <TextView android:id="@+id/conf_title"
+                      android:text="@string/conf_title"
+                      android:textAppearance="?android:textAppearanceLarge"
+                      android:gravity="center|top"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"/>
 
-    <LinearLayout android:orientation="horizontal"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="10dp">
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:textAppearance="?android:textAppearanceMedium"
+                      android:text="@string/label_url_logo"
+                      android:layout_marginTop="10dp"/>
 
-        <EditText android:id="@+id/conf_url"
-                  android:layout_weight="1"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:inputType="textUri"/>
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="10dp">
 
-        <Button android:id="@+id/conf_btn_ok"
-                android:text="@string/btn_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <EditText android:id="@+id/conf_url"
+                          android:layout_weight="1"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:inputType="textUri"/>
 
-    </LinearLayout>
+                <Button android:id="@+id/conf_btn_preview"
+                        android:text="@string/btn_preview"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
-    <ImageView android:id="@+id/conf_img_preview"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="25dp"/>
+            </LinearLayout>
 
-    <Button android:id="@+id/conf_btn_save"
-            android:text="@string/save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"/>
+            <ImageView android:id="@+id/conf_img_preview"
+                       android:layout_gravity="center"
+                       android:layout_marginTop="15dp"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"/>
 
-</LinearLayout>
+            <CheckBox android:id="@+id/conf_chkbox"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="@string/chkbox_logo"
+                      android:focusable="true"
+                      android:layout_marginTop="10dp"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="15dp">
+
+                <SeekBar android:id="@+id/conf_seekbar"
+                         android:layout_width="match_parent"
+                         android:layout_height="0dp"
+                         android:layout_weight="2"
+                         android:max="180"
+                         android:focusable="true"
+                         android:progress="120"/>
+
+                <TextView android:id="@+id/conf_txt_preview"
+                          android:layout_width="match_parent"
+                          android:layout_weight="1"
+                          android:layout_height="0dp"
+                          android:text="@string/dummy_txt_size"
+                          android:textSize="120sp"/>
+
+            </LinearLayout>
+
+            <Button android:id="@+id/conf_btn_save"
+                    android:text="@string/save"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

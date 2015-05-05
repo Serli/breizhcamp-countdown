@@ -2,17 +2,22 @@ package fr.serli.breizhcampcountdown.app;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import fr.serli.breizhcampcountdown.app.util.SystemUiHider;
 
 import android.app.Activity;
@@ -58,14 +63,16 @@ public class CountDownActivity extends Activity {
     private SystemUiHider mSystemUiHider;
 
     private LinearLayout layout;
+    ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_count_down);
 
-        final View contentView = findViewById(R.id.fullscreen_content);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
+        final TextView contentView = (TextView) findViewById(R.id.fullscreen_content);
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -86,20 +93,31 @@ public class CountDownActivity extends Activity {
         });
 
         layout = (LinearLayout) findViewById(R.id.cd_frame_layout);
+        logo = ((ImageView) findViewById(R.id.logo));
+
+        if (preferences.getBoolean("logoOnTop", false)) {
+            layout.setOrientation(LinearLayout.VERTICAL);
+        }
+
+        contentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, preferences.getFloat("textSize", 120));
 
         Intent receptedIntent = getIntent();
-        Long duration = receptedIntent.getLongExtra("duration",3);
+        Long duration = receptedIntent.getLongExtra("duration", 3);
 
         Long durationInMillis = duration*60000;
 
         new CountDownTimer(durationInMillis, 1000) {
             public void onTick(long millisUntilFinished){
-                long minutes = millisUntilFinished/60000;
-                long secondes = (millisUntilFinished%60000)/1000;
-                ((TextView) contentView).setText(minutes+":"+secondes);
-                if(secondes<10){
-                    ((TextView) contentView).setText(minutes+":0"+secondes);
+                String minutes = ""+millisUntilFinished/60000;
+                String secondes = ""+(millisUntilFinished%60000)/1000;
+
+                if(Integer.parseInt(secondes)<10){
+                    secondes="0"+secondes;
                 }
+                if(Integer.parseInt(minutes)<10){
+                    minutes="0"+minutes;
+                }
+                contentView.setText(minutes + ":" + secondes);
 
                 if (millisUntilFinished<=300000){
                     layout.setBackgroundColor(Color.rgb(240, 250, 60));
@@ -107,7 +125,11 @@ public class CountDownActivity extends Activity {
             }
 
             public void onFinish(){
-                ((TextView) contentView).setText("Time's up !");
+                contentView.setText("Time's up !");
+
+                float textSize = contentView.getWidth() / 11;
+                Log.i("textsize",""+textSize);
+                contentView.setTextSize(textSize);
 
                 final AnimationDrawable drawable = new AnimationDrawable();
                 drawable.addFrame(new ColorDrawable(Color.RED), 400);
@@ -119,15 +141,10 @@ public class CountDownActivity extends Activity {
             }
         }.start();
 
-        Bitmap image;
-        try {
-            FileInputStream input = openFileInput("bcCountdownLogo.png");
-            image = BitmapFactory.decodeStream(input);
-            ((ImageView) findViewById(R.id.logo)).setImageBitmap(image);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        String url = preferences.getString("imageUrl", "http://www.breizhcamp.org/img/logo.png");
+        Picasso.with(this.getApplicationContext())
+                .load(url)
+                .into(logo);
     }
 
     @Override
