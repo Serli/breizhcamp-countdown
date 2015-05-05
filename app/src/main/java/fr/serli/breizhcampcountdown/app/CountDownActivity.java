@@ -127,8 +127,7 @@ public class CountDownActivity extends Activity {
             public void onFinish(){
                 contentView.setText("Time's up !");
 
-                float textSize = contentView.getWidth() / 11;
-                Log.i("textsize",""+textSize);
+                float textSize = layout.getWidth() / 11;
                 contentView.setTextSize(textSize);
 
                 final AnimationDrawable drawable = new AnimationDrawable();

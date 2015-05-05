@@ -16,7 +16,7 @@
         <ImageView android:id="@+id/logo"
                    android:layout_width="300dp"
                    android:layout_height="200dp"
-                   android:layout_gravity="top|center"
+                   android:layout_gravity="center|center_horizontal"
                    android:src="@drawable/bclogo"/>
 
         <TextView android:id="@+id/fullscreen_content"
