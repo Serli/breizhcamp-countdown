@@ -141,9 +141,11 @@ public class CountDownActivity extends Activity {
             }
         }.start();
 
-
+        File img = getFileStreamPath("bcCountdownLogo.png");
         Picasso.with(this.getApplicationContext())
-                .load(getFileStreamPath("bcCountdownLogo.png"))
+                .invalidate(img);
+        Picasso.with(this.getApplicationContext())
+                .load(img)
                 .into(logo);
 
     }

@@ -7,15 +7,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.FileNotFoundException;
@@ -97,6 +94,8 @@ public class ConfActivity extends Activity {
                                 try {
                                     FileOutputStream out = openFileOutput("bcCountdownLogo.png", Context.MODE_PRIVATE);
                                     image.compress(Bitmap.CompressFormat.PNG, 90, out);
+                                    Intent retour = new Intent(ConfActivity.this, MainActivity.class);
+                                    startActivity(retour);
                                 } catch (FileNotFoundException e) {
                                     Toast.makeText(getApplicationContext(), "Error while saving image", Toast.LENGTH_SHORT).show();
                                 }
@@ -112,8 +111,7 @@ public class ConfActivity extends Activity {
                             }
                         });
 
-                Intent retour = new Intent(ConfActivity.this, MainActivity.class);
-                startActivity(retour);
+
             }
         });
 
