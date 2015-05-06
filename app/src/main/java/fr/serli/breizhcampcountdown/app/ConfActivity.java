@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
@@ -15,16 +15,22 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 
 public class ConfActivity extends Activity {
 
-    EditText txtUrl;
-    TextView txtPreview;
-    CheckBox checkbox;
-    SeekBar seekbar;
-    View btnPreview;
-    SharedPreferences preferences;
+    private EditText txtUrl;
+    private TextView txtPreview;
+    private CheckBox checkbox;
+    private SeekBar seekbar;
+    private View btnPreview;
+    private SharedPreferences preferences;
+    private Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class ConfActivity extends Activity {
         txtPreview = (TextView) findViewById(R.id.conf_txt_preview);
         txtUrl = (EditText) findViewById(R.id.conf_url);
         checkbox = (CheckBox) findViewById(R.id.conf_chkbox);
-        seekbar = (SeekBar)findViewById(R.id.conf_seekbar);
+        seekbar = (SeekBar) findViewById(R.id.conf_seekbar);
         btnPreview = findViewById(R.id.conf_btn_preview);
 
         checkbox.setChecked(preferences.getBoolean("logoOnTop", false));
@@ -62,10 +68,11 @@ public class ConfActivity extends Activity {
         btnPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String imgUrl = txtUrl.getText().toString();
+                final String imgUrl = txtUrl.getText().toString();
                 Picasso.with(v.getContext())
                         .load(imgUrl)
                         .into((ImageView) findViewById(R.id.conf_img_preview));
+
             }
         });
 
@@ -80,6 +87,31 @@ public class ConfActivity extends Activity {
                 editor.apply();
                 editor.putBoolean("logoOnTop", checkbox.isChecked());
                 editor.apply();
+
+                Picasso.with(v.getContext())
+                        .load(imgUrl)
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                image = bitmap;
+                                try {
+                                    FileOutputStream out = openFileOutput("bcCountdownLogo.png", Context.MODE_PRIVATE);
+                                    image.compress(Bitmap.CompressFormat.PNG, 90, out);
+                                } catch (FileNotFoundException e) {
+                                    Toast.makeText(getApplicationContext(), "Error while saving image", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+                                Toast.makeText(getApplicationContext(), "Error while saving image", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            }
+                        });
+
                 Intent retour = new Intent(ConfActivity.this, MainActivity.class);
                 startActivity(retour);
             }

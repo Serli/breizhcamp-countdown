@@ -98,7 +98,6 @@ public class CountDownActivity extends Activity {
 
         if (preferences.getBoolean("logoOnTop", false)) {
             layout.setOrientation(LinearLayout.VERTICAL);
-            contentView.setGravity(Gravity.CENTER);
         }
 
         contentView.setTextSize(TypedValue.COMPLEX_UNIT_SP, preferences.getFloat("textSize", 120));
@@ -142,10 +141,11 @@ public class CountDownActivity extends Activity {
             }
         }.start();
 
-        String url = preferences.getString("imageUrl", "http://www.breizhcamp.org/img/logo.png");
+
         Picasso.with(this.getApplicationContext())
-                .load(url)
+                .load(getFileStreamPath("bcCountdownLogo.png"))
                 .into(logo);
+
     }
 
     @Override

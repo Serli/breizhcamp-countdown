@@ -21,14 +21,14 @@
 
         <TextView android:id="@+id/fullscreen_content"
                   android:layout_height="match_parent"
-                  android:layout_width="wrap_content"
+                  android:layout_width="match_parent"
                   android:keepScreenOn="true"
                   android:textColor="#ffffff"
                   android:textStyle="bold"
-                  android:gravity="right|center_vertical"
-                  android:textAlignment="gravity"
+                  android:gravity="center"
+                  android:textAlignment="center"
                   android:textSize="120sp"
-                  android:layout_gravity="right|center_vertical"/>
+                  android:layout_gravity="center"/>
 
 
     </LinearLayout>
