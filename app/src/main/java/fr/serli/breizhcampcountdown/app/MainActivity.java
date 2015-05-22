@@ -1,21 +1,29 @@
 package fr.serli.breizhcampcountdown.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class MainActivity extends Activity {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
-    private EditText durationSet;
-    private Button btnStart;
+public class MainActivity extends AppCompatActivity {
+
+    public static final String PREVIOUS_DURATION_PREFERENCE = "PREVIOUS_DURATION_PREFERENCE";
+
+    @InjectView(R.id.duration)
+    EditText durationSet;
+    @InjectView(R.id.btn_start)
+    Button btnStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +31,11 @@ public class MainActivity extends Activity {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
+        ButterKnife.inject(this);
 
-        durationSet = (EditText) findViewById(R.id.duration);
 
-        durationSet.setText(preferences.getString("previousDuration", "10"));
-
-        btnStart = (Button) findViewById(R.id.btn_start);
+        durationSet.setText(preferences.getString(PREVIOUS_DURATION_PREFERENCE, "10"));
 
         durationSet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -42,36 +48,45 @@ public class MainActivity extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().equals("")) {
+                if ("".equals(s.toString())) {
                     btnStart.setEnabled(false);
                 } else {
                     btnStart.setEnabled(true);
                 }
             }
         });
+    }
 
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Long duration = Long.parseLong(durationSet.getText().toString());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("previousDuration", duration.toString());
-                editor.apply();
-                Intent startCountdown = new Intent(MainActivity.this, CountDownActivity.class);
-                startCountdown.putExtra("duration", duration);
-                startActivity(startCountdown);
-                MainActivity.this.onPause();
-            }
-        });
+    @OnClick(R.id.btn_start)
+    public void onClickOnStart() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
 
-        (findViewById(R.id.conf)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent startConf = new Intent(MainActivity.this, ConfActivity.class);
-                startActivity(startConf);
-                MainActivity.this.onPause();
-            }
+        Long duration = Long.parseLong(durationSet.getText().toString());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PREVIOUS_DURATION_PREFERENCE, duration.toString());
+        editor.apply();
+        Intent startCountdown = new Intent(MainActivity.this, CountDownActivity.class);
+        startCountdown.putExtra(CountDownActivity.DURATION, duration);
+        startActivity(startCountdown);
+        MainActivity.this.onPause();
+    }
 
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Intent startConf = new Intent(MainActivity.this, ConfigurationActivity.class);
+            startActivity(startConf);
+            MainActivity.this.onPause();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

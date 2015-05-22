@@ -27,8 +27,8 @@
             android:theme="@style/FullscreenTheme" >
         </activity>
         <activity
-            android:name=".ConfActivity"
-            android:label="@string/title_activity_conf"
+            android:name=".ConfigurationActivity"
+            android:label="@string/conf_title_activity"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
