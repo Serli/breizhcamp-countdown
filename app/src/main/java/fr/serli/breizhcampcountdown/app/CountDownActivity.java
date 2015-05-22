@@ -52,6 +52,9 @@ public class CountDownActivity extends AppCompatActivity {
         int textSize = preferences.getInt(ConfigurationActivity.TEXT_SIZE_PREFERENCE, ConfigurationActivity.CONF_DEFAULT_TEXT_SIZE);
         contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
 
+        String imageUrl = preferences.getString(ConfigurationActivity.IMAGE_URL_PREFERENCE, getResources().getString(R.string.conf_default_logo_url));
+        int rotate = preferences.getInt(ConfigurationActivity.IMAGE_ORIENTATION_PREFERENCE, ConfigurationActivity.HORIZONTAL_IMAGE_ORIENTATION);
+
         Intent receptedIntent = getIntent();
         final Long duration = receptedIntent.getLongExtra(DURATION, 3);
 
@@ -87,12 +90,12 @@ public class CountDownActivity extends AppCompatActivity {
             }
         }.start();
 
-        String imageUrl = preferences.getString(ConfigurationActivity.IMAGE_URL_PREFERENCE, getResources().getString(R.string.conf_default_logo_url));
-        int rotate = preferences.getInt(ConfigurationActivity.IMAGE_ORIENTATION_PREFERENCE, ConfigurationActivity.VERTICAL_IMAGE_ORIENTATION);
-
         Picasso.with(this.getApplicationContext())
                 .load(imageUrl)
                 .rotate(rotate)
                 .into(logo);
+
+
+
     }
 }

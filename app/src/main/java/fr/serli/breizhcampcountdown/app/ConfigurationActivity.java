@@ -25,7 +25,7 @@ public class ConfigurationActivity extends Activity {
     public static final int HORIZONTAL_IMAGE_ORIENTATION = 0;
     public static final int TEXT_MIN_SIZE = 20;
     public static final int CONF_DEFAULT_TEXT_SIZE = 100;
-    public static final int TEXT_MAX_SIZE =150;
+    public static final int TEXT_MAX_SIZE =200;
 
 
     @InjectView(R.id.conf_text_url)
